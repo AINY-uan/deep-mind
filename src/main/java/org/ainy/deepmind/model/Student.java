@@ -1,5 +1,7 @@
 package org.ainy.deepmind.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -12,6 +14,8 @@ import java.math.BigDecimal;
  */
 @Data
 @NoArgsConstructor
+@Builder
+@AllArgsConstructor
 public class Student {
     /**
      * 学生id

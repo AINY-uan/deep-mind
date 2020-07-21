@@ -228,4 +228,53 @@ public class DeepMind {
 
         System.out.println(PropertyUtil.getProperty("s2", "123"));
     }
+
+    @Test
+    public void ex10() {
+
+        int i = 12;
+
+        System.out.println(i += i -= i *= 12);
+    }
+
+    static boolean is_odd(long n) {
+        if (n == 2 || n == 3) {
+            return true;
+        }
+        if (n % 2 == 0) {
+            return false;
+        }
+        long i;
+        for (i = 3; i < Math.sqrt(n) + 1; i++) {
+            if (n % i == 0) {
+                return false;
+            }
+
+        }
+        return true;
+    }
+
+    @Test
+    public void ex11() {
+
+        int n = 100;
+        int count = 0;
+        for (int i = 2; ; i++) {
+            if (is_odd(i)) {
+                count++;
+            }
+            if (count == n) {
+                System.out.println("第" + n + "项素数为:" + i);
+                break;
+            }
+
+        }
+
+    }
+
+    @Test
+    public void  ex12 (){
+
+        System.out.println(10+(10 >> 1));
+    }
 }

@@ -124,4 +124,12 @@ public class FileUtil {
             return false;
         }
     }
+
+    public static String[] findFile(String path, String keyword) {
+
+        File dir = new File(path);
+        FilenameFilter filter = (dir1, name) -> name.endsWith(keyword);
+        String[] children = dir.list(filter);
+        return children;
+    }
 }

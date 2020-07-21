@@ -63,8 +63,8 @@ public class MaskUtil {
         }
         return StringUtils.left(num, 3).concat(
                 StringUtils.removeStart(StringUtils.leftPad(
-                                StringUtils.right(num, 4),
-                                StringUtils.length(num), "*")
+                        StringUtils.right(num, 4),
+                        StringUtils.length(num), "*")
                         , "***"));
     }
 

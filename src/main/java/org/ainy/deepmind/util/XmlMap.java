@@ -1,6 +1,5 @@
 package org.ainy.deepmind.util;
 
-
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
@@ -24,21 +23,6 @@ public class XmlMap {
     /**
      * 根据Map创建Xml
      *
-     * @param params Map数据
-     * @return xml字符串
-     */
-    public static String createXmlByMap(Map<String, Object> params) {
-
-        String parentName = "Document";
-        Document doc = DocumentHelper.createDocument();
-        doc.addElement(parentName);
-        String xml = iteratorXml(doc.getRootElement(), parentName, params, false);
-        return formatXml(xml);
-    }
-
-    /**
-     * 根据Map创建Xml
-     *
      * @param parentName 根节点名称
      * @param params     Map数据
      * @return xml字符串
@@ -48,6 +32,7 @@ public class XmlMap {
         Document doc = DocumentHelper.createDocument();
         doc.addElement(parentName);
         String xml = iteratorXml(doc.getRootElement(), parentName, params, false);
+
         return formatXml(xml);
     }
 
@@ -59,7 +44,7 @@ public class XmlMap {
      * @param isCdata    CDATA标签用于说明数据不被XML解析器解析
      * @return xml字符串
      */
-    public static String createXmlByMap(String parentName, Map<String, Object> params, boolean isCdata) {
+    public static String createXmlByMap(String parentName, Map<?, ?> params, boolean isCdata) {
 
         Document doc = DocumentHelper.createDocument();
         doc.addElement(parentName);
@@ -67,20 +52,19 @@ public class XmlMap {
         return formatXml(xml);
     }
 
-    @SuppressWarnings("unchecked")
-    private static String iteratorXml(Element element, String parentName, Map<String, Object> params, boolean isCdata) {
+    private static String iteratorXml(Element element, String parentName, Map<?, ?> params, boolean isCdata) {
 
         Element e = element.addElement(parentName);
-        Set<String> set = params.keySet();
-        for (String key : set) {
+        Set<?> set = params.keySet();
+        for (Object key : set) {
             if (params.get(key) instanceof Map) {
-                iteratorXml(e, key, (Map<String, Object>) params.get(key), isCdata);
+                iteratorXml(e, (String) key, (Map<?, ?>) params.get(key), isCdata);
             } else {
                 String value = params.get(key) == null ? "" : params.get(key).toString();
                 if (isCdata) {
-                    e.addElement(key).addCDATA(value);
+                    e.addElement((String) key).addCDATA(value);
                 } else {
-                    e.addElement(key).addText(value);
+                    e.addElement((String) key).addText(value);
                 }
             }
         }
@@ -138,6 +122,7 @@ public class XmlMap {
      * @return 第一个为Root节点，Root节点之后为Root的元素，如果为多层，可以通过key获取下一层Map
      */
     public static Map<String, Object> createMapByXml(String xml) {
+
         Document doc = null;
         try {
             doc = DocumentHelper.parseText(xml);
@@ -149,43 +134,41 @@ public class XmlMap {
             return map;
         }
         Element rootElement = doc.getRootElement();
-        elementTomap(rootElement, map);
+        elementToMap(rootElement, map);
         return map;
     }
 
     /**
      * XmlToMap核心方法，里面有递归调用
      *
-     * @param outele 根节点
-     * @param outmap 输出Map
+     * @param outElement 根节点
+     * @param outMap     输出Map
      */
-    @SuppressWarnings("unchecked")
-    private static void elementTomap(Element outele, Map<String, Object> outmap) {
-        List<Element> list = outele.elements();
+    private static void elementToMap(Element outElement, Map<String, Object> outMap) {
+
+        List<?> list = outElement.elements();
         int size = list.size();
         if (size == 0) {
-            outmap.put(outele.getName(), outele.getTextTrim());
+            outMap.put(outElement.getName(), outElement.getTextTrim());
         } else {
-            Map<String, Object> innermap = new HashMap<>();
-            for (Element ele1 : list) {
-                String eleName = ele1.getName();
-                Object obj = innermap.get(eleName);
+            Map<String, Object> innerMap = new HashMap<>(16);
+            for (Object ele1 : list) {
+                Element e = (Element) ele1;
+                String eleName = e.getName();
+                Object obj = innerMap.get(eleName);
                 if (obj == null) {
-                    elementTomap(ele1, innermap);
+                    elementToMap(e, innerMap);
                 } else {
-                    if (obj instanceof Map) {
-                        List<Map<String, Object>> list1 = new ArrayList<>();
-                        list1.add((Map<String, Object>) innermap.remove(eleName));
-                        elementTomap(ele1, innermap);
-                        list1.add((Map<String, Object>) innermap.remove(eleName));
-                        innermap.put(eleName, list1);
-                    } else {
-                        elementTomap(ele1, innermap);
-                        ((List<Map<String, Object>>) obj).add(innermap);
+                    if (obj instanceof Map<?, ?>) {
+                        List<Object> list1 = new ArrayList<>();
+                        list1.add(innerMap.remove(eleName));
+                        elementToMap(e, innerMap);
+                        list1.add(innerMap.remove(eleName));
+                        innerMap.put(eleName, list1);
                     }
                 }
             }
-            outmap.put(outele.getName(), innermap);
+            outMap.put(outElement.getName(), innerMap);
         }
     }
 }

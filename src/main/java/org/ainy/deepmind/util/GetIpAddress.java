@@ -23,7 +23,7 @@ public class GetIpAddress {
         InetAddress inetAddress = null;
         try {
             // 如果是windows操作系统
-            if (isWindow()) {
+            if (isWindows()) {
                 inetAddress = InetAddress.getLocalHost();
             } else {
                 boolean bFindIp = false;
@@ -67,13 +67,13 @@ public class GetIpAddress {
      *
      * @return true: Windows；false：other
      */
-    private static boolean isWindow() {
+    private static boolean isWindows() {
 
-        boolean isWindow = false;
+        boolean isWindows = false;
         String osName = System.getProperty("os.name");
         if (osName.toLowerCase().contains(IS_WINDOWS)) {
-            isWindow = true;
+            isWindows = true;
         }
-        return isWindow;
+        return isWindows;
     }
 }

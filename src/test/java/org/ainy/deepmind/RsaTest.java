@@ -20,7 +20,7 @@ public class RsaTest {
         RsaUtil.genKeyPair(filepath);
 
         System.out.println("--------------公钥加密私钥解密过程-------------------");
-        String plainText = "postgres";
+        String plainText = "authority";
         //公钥加密过程
         byte[] cipherData = RsaUtil.encrypt(RsaUtil.loadPublicKeyByStr(RsaUtil.loadPublicKeyByFile(filepath)), plainText.getBytes());
         String cipher = Base64.encode(cipherData);
@@ -34,7 +34,7 @@ public class RsaTest {
         System.out.println();
 
         System.out.println("--------------私钥加密公钥解密过程-------------------");
-        plainText = "postgres";
+        plainText = "authority";
         //私钥加密过程
         cipherData = RsaUtil.encrypt(RsaUtil.loadPrivateKeyByStr(RsaUtil.loadPrivateKeyByFile(filepath)), plainText.getBytes());
         cipher = Base64.encode(cipherData);

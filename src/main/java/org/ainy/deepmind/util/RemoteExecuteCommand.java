@@ -21,7 +21,7 @@ public class RemoteExecuteCommand {
 
     private static final Logger logger = LoggerFactory.getLogger(RemoteExecuteCommand.class);
 
-    private static final String DEFAULTCHART = "UTF-8";
+    private static final String DEFAULT_CHART = "UTF-8";
 
     /**
      * @param ip       主机IP地址
@@ -93,7 +93,7 @@ public class RemoteExecuteCommand {
         InputStream stdout = new StreamGobbler(in);
         StringBuilder buffer = new StringBuilder();
         try {
-            BufferedReader br = new BufferedReader(new InputStreamReader(stdout, RemoteExecuteCommand.DEFAULTCHART));
+            BufferedReader br = new BufferedReader(new InputStreamReader(stdout, RemoteExecuteCommand.DEFAULT_CHART));
             String line;
             while ((line = br.readLine()) != null) {
                 buffer.append(line).append("\n");

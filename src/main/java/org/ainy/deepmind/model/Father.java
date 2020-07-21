@@ -7,6 +7,8 @@ package org.ainy.deepmind.model;
  */
 public class Father {
 
+    private String name;
+
     static {
         System.out.println("父类的静态代码块");
     }
@@ -17,5 +19,10 @@ public class Father {
 
     public Father() {
         System.out.println("父类的构造函数");
+    }
+
+    public void function() {
+
+        System.out.println("我是你爹");
     }
 }

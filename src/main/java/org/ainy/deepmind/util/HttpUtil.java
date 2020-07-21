@@ -20,7 +20,7 @@ import java.io.IOException;
  * @description Http请求工具
  */
 @Slf4j
-public class HttpxUtil {
+public class HttpUtil {
 
     /**
      * Http Post请求
@@ -30,29 +30,39 @@ public class HttpxUtil {
      * @param contentType 内容类型
      * @return 请求成功时返回，其他情况返回null
      */
-    public static String sendPostX(String url, String params, String contentType) {
+    public static String doPost(String url, String params, String contentType) {
 
         CloseableHttpClient httpClient = getHttpClient();
         HttpPost httpPost = new HttpPost(url);
         try {
-            if (StringUtils.isNoneEmpty(params)) {
-                StringEntity s = new StringEntity(params, "utf-8");
-                s.setContentEncoding("UTF-8");
-                s.setContentType(contentType);
-                httpPost.setEntity(s);
+            if (StringUtils.isNotEmpty(params)) {
+                StringEntity requestEntity = new StringEntity(params, "UTF-8");
+                requestEntity.setContentEncoding("UTF-8");
+                requestEntity.setContentType(contentType);
+                httpPost.setEntity(requestEntity);
             }
             try (CloseableHttpResponse response = httpClient.execute(httpPost)) {
-                if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK && response.getEntity() != null) {
-                    return EntityUtils.toString(response.getEntity(), "UTF-8");
+                if (response == null) {
+                    log.error("http response is null");
+                } else {
+                    if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+                        if (response.getEntity() == null) {
+                            log.error("http response code is 200, but response entity is null");
+                        } else {
+                            return EntityUtils.toString(response.getEntity(), "UTF-8");
+                        }
+                    } else {
+                        log.error("http request status code is {}", response.getStatusLine().getStatusCode());
+                    }
                 }
             }
         } catch (Exception e) {
-            log.error(e.getMessage());
+            log.error("http request error");
         } finally {
             try {
                 closeHttpClient(httpClient);
             } catch (IOException e) {
-                log.error(e.getMessage());
+                log.error("close client error");
             }
         }
         return null;
@@ -65,23 +75,33 @@ public class HttpxUtil {
      * @param params 请求参数
      * @return 请求成功时返回，其他情况返回null
      */
-    public static String sendGetX(String url, String params) {
+    public static String doGet(String url, String params) {
 
         CloseableHttpClient httpClient = getHttpClient();
-        HttpGet httpGet = new HttpGet(url + params);
+        HttpGet httpGet = new HttpGet(url.concat("?").concat(params));
         try {
             try (CloseableHttpResponse response = httpClient.execute(httpGet)) {
-                if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK && response.getEntity() != null) {
-                    return EntityUtils.toString(response.getEntity(), "UTF-8");
+                if (response == null) {
+                    log.error("http response is null");
+                } else {
+                    if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+                        if (response.getEntity() == null) {
+                            log.error("http response code is 200, but response entity is null");
+                        } else {
+                            return EntityUtils.toString(response.getEntity(), "UTF-8");
+                        }
+                    } else {
+                        log.error("http request status code is {}", response.getStatusLine().getStatusCode());
+                    }
                 }
             }
         } catch (Exception e) {
-            log.error(e.getMessage());
+            log.error("http request error");
         } finally {
             try {
                 closeHttpClient(httpClient);
             } catch (IOException e) {
-                log.error(e.getMessage());
+                log.error("close client error");
             }
         }
         return null;

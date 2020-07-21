@@ -1,6 +1,7 @@
 package org.ainy.deepmind.util;
 
-import org.ainy.deepmind.model.MultiThreadRecord;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
 import java.io.DataOutputStream;
 import java.io.InputStream;
@@ -65,7 +66,7 @@ public class MultiThreadProxyHubApi {
 
     public void run() {
 
-        final ConcurrentHashMap<Integer, MultiThreadRecord> records = new ConcurrentHashMap<>();
+        final ConcurrentHashMap<Integer, MultiThreadRecord> records = new ConcurrentHashMap<>(16);
 
         // 建立ExecutorService线程池
         ExecutorService exec = Executors.newFixedThreadPool(threadNum);
@@ -174,5 +175,13 @@ public class MultiThreadProxyHubApi {
         b0 = (byte) (b0 << 4);
         byte b1 = Byte.decode("0x" + new String(new byte[]{src1}));
         return (byte) (b0 ^ b1);
+    }
+
+    @Data
+    @AllArgsConstructor
+    private static class MultiThreadRecord {
+
+        private long st;
+        private long et;
     }
 }

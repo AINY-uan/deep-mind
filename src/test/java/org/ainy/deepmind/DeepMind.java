@@ -273,8 +273,18 @@ public class DeepMind {
     }
 
     @Test
-    public void  ex12 (){
+    public void ex12() {
 
-        System.out.println(10+(10 >> 1));
+        System.out.println(10 + (10 >> 1));
+    }
+
+    @Test
+    public void ex13() {
+
+        String key = "param";
+
+        System.out.println(key.hashCode());
+
+        System.out.println(key.hashCode() & (15));
     }
 }

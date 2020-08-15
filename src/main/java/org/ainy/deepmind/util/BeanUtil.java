@@ -12,7 +12,7 @@ public class BeanUtil {
     /**
      * 复制名称相同类型相同字段的值
      */
-    public static <T1, T> T copyData(T1 srcObj, Class<T> targetClass) {
+    public static <S, T> T copyData(S srcObj, Class<T> targetClass) {
 
         // 获取源数据的类
         Class<?> srcClass = srcObj.getClass();
@@ -21,12 +21,12 @@ public class BeanUtil {
 
         // 获取clazz1和clazz2中的属性
         Field[] srcFields = srcClass.getDeclaredFields();
-        Field[] targetFlelds = targetClass.getDeclaredFields();
+        Field[] targetFields = targetClass.getDeclaredFields();
 
         // 遍历srcFields
         for (Field f1 : srcFields) {
-            // 遍历targetFlelds，逐字段匹配
-            for (Field f2 : targetFlelds) {
+            // 遍历targetFields，逐字段匹配
+            for (Field f2 : targetFields) {
                 // 复制字段
                 copyField(srcObj, targetObj, f1, f2);
             }
@@ -37,7 +37,7 @@ public class BeanUtil {
     /**
      * 按照字段表复制相同名称相同类型的字段的值
      */
-    public static <T1, T> T copyData(T1 obj, Class<T> clazz2, String[] fieldNames) {
+    public static <S, T> T copyData(S obj, Class<T> clazz2, String[] fieldNames) {
 
         // 获取源数据的类
         Class<?> clazz1 = obj.getClass();
